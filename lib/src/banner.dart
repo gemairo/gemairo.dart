@@ -18,7 +18,7 @@ class BannerAd extends StatelessWidget {
     this.onImpression,
     this.onClick,
     required this.onReport,
-    this.baseUrl = "https://api.stats.fm/api/v1/saaf",
+    this.baseUrl = "https://saaf-api.gemairo.app/api/v1/saaf",
     required this.errorWidget,
   }) : super(key: key);
 
@@ -62,16 +62,10 @@ class BannerAd extends StatelessWidget {
 
     if (this.onClick != null) this.onClick!(adResponse);
 
-    if ((adResponse.banner.isPlusAd ?? false) != true) {
-      launchUrl(
-        Uri.parse("${this.baseUrl}/clicks/${adResponse.requestId}"),
-        mode: LaunchMode.externalApplication,
-      );
-    } else {
-      await http.get(
-        Uri.parse("${this.baseUrl}/clicks/${adResponse.requestId}"),
-      );
-    }
+    launchUrl(
+      Uri.parse("${this.baseUrl}/clicks/${adResponse.requestId}"),
+      mode: LaunchMode.externalApplication,
+    );
   }
 
   @override
@@ -100,7 +94,6 @@ class BannerAd extends StatelessWidget {
             //       "image":
             //           "https://i.scdn.co/image/ab67616d0000b273f7916a35ffdd6cb90bbbdf2f",
             //       "imageOnly": false,
-            //       "isPlusAd": false,
             //       "score": 1.0
             //     }
             //   },
@@ -121,13 +114,13 @@ class BannerAd extends StatelessWidget {
           } else {
             child = Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.5),
+                borderRadius: BorderRadius.circular(12),
                 color: this.style.backgroundColor,
               ),
               width: double.infinity,
               height: 70.0 + 7.0 + 7.0,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.5),
+                borderRadius: BorderRadius.circular(12),
                 child: Stack(
                   children: [
                     Center(
@@ -189,44 +182,43 @@ class BannerAd extends StatelessWidget {
                 width: double.infinity,
               ),
             ),
-            if (adResponse.banner.isPlusAd != true)
-              GestureDetector(
-                onTap: () => this.onReport(adResponse),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    margin:
-                        EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 4),
-                    decoration: BoxDecoration(
-                      color: this.style.backgroundColor,
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: this.style.backgroundColor,
-                          offset: Offset(-5, 0),
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: this.style.primaryColor.withOpacity(.1),
-                        borderRadius: BorderRadius.circular(3),
+            GestureDetector(
+              onTap: () => this.onReport(adResponse),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  margin:
+                      EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 4),
+                  decoration: BoxDecoration(
+                    color: this.style.backgroundColor,
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 5,
+                        color: this.style.backgroundColor,
+                        offset: Offset(0, 0),
                       ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 4.5, vertical: 1.4),
-                      child: Text(
-                        "AD",
-                        style: TextStyle(
-                          fontSize: 9,
-                          color: this.style.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ],
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: this.style.primaryColor.withOpacity(.1),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 4.5, vertical: 1.4),
+                    child: Text(
+                      "AD",
+                      style: TextStyle(
+                        fontSize: 9,
+                        color: this.style.primaryColor,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
               ),
+            ),
           ],
         ),
       ),
@@ -235,10 +227,10 @@ class BannerAd extends StatelessWidget {
 
   Widget buildAd(BuildContext context, BannerAdResponse adResponse) {
     return Material(
-      borderRadius: BorderRadius.circular(12.5),
+      borderRadius: BorderRadius.circular(12),
       color: this.style.backgroundColor,
       child: InkWell(
-        borderRadius: BorderRadius.circular(12.5),
+        borderRadius: BorderRadius.circular(12),
         onTap: () => click(adResponse),
         child: Padding(
           padding: EdgeInsets.all(7),
@@ -294,42 +286,41 @@ class BannerAd extends StatelessWidget {
                   ),
                 ],
               ),
-              if (adResponse.banner.isPlusAd != true)
-                GestureDetector(
-                  onTap: () => this.onReport(adResponse),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
+              GestureDetector(
+                onTap: () => this.onReport(adResponse),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: this.style.backgroundColor,
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 5,
+                          color: this.style.backgroundColor,
+                          offset: Offset(-5, 0),
+                        ),
+                      ],
+                    ),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: this.style.backgroundColor,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 5,
-                            color: this.style.backgroundColor,
-                            offset: Offset(-5, 0),
-                          ),
-                        ],
+                        color: this.style.primaryColor.withOpacity(.1),
+                        borderRadius: BorderRadius.circular(3),
                       ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: this.style.primaryColor.withOpacity(.1),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 4.5, vertical: 1.4),
-                        child: Text(
-                          "AD",
-                          style: TextStyle(
-                            fontSize: 9,
-                            color: this.style.primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 4.5, vertical: 1.4),
+                      child: Text(
+                        "AD",
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: this.style.primaryColor,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                 ),
+              ),
             ],
           ),
         ),

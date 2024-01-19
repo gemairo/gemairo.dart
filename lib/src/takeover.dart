@@ -8,7 +8,6 @@ class TakeoverAd {
   final Function(TakeoverAdResponse response)? onClick;
   final Function(TakeoverAdResponse response) onReport;
   final String baseUrl;
-  final Widget errorWidget;
 
   TakeoverAdResponse? adResponse;
 
@@ -22,8 +21,7 @@ class TakeoverAd {
     this.onImpression,
     this.onClick,
     required this.onReport,
-    this.baseUrl = "https://api.stats.fm/api/v1/saaf",
-    required this.errorWidget,
+    this.baseUrl = "https://saaf-api.gemairo.app/api/v1/saaf",
   }) : super();
 
   Future<TakeoverAdResponse> load() async {
@@ -119,9 +117,10 @@ class TakeoverAdWidget extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: ListView(
+          shrinkWrap: true,
+          // mainAxisAlignment: MainAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               margin: EdgeInsets.symmetric(horizontal: 35, vertical: 15),
@@ -139,44 +138,61 @@ class TakeoverAdWidget extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       this.adResponse.takeover.shout,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "StatsfmSans",
-                        fontSize: 19,
-                        color: this.style.titleColor,
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(fontWeight: FontWeight.w600),
+                      // style: TextStyle(
+                      //   fontWeight: FontWeight.bold,
+                      //   fontFamily: "StatsfmSans",
+                      //   fontSize: 19,
+                      //   color: this.style.titleColor,
+                      // ),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   SizedBox(height: 25),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      this.adResponse.takeover.image,
-                      fit: BoxFit.cover,
-                      height: 220,
-                      width: 220,
-                      // width: double.infinity,
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: 500,
+                      minHeight: 100,
+                      maxWidth: MediaQuery.of(context).size.width - 80,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: this.adResponse.takeover.image,
+                        // imageUrl:
+                        //     'https://media.discordapp.net/attachments/712420469692956712/1170733345567690783/image.png?ex=65b66664&is=65a3f164&hm=92379066355f559721e75a034b4cf512ea4a227c46cfbb816f0c23bae8b3de42&=&format=webp&quality=lossless&width=2152&height=1056',
+                        fit: BoxFit.contain,
+                        // width: double.infinity,
+                        // height: double.infinity,
+                        placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(
+                            color: this.style.primaryColor,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 20),
                   Text(
                     this.adResponse.takeover.title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "StatsfmSans",
-                      fontSize: 18,
-                      color: this.style.titleColor,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(fontWeight: FontWeight.w600, fontSize: 18),
+                    // style: TextStyle(
+                    //   fontWeight: FontWeight.bold,
+                    //   fontFamily: "StatsfmSans",
+                    //   fontSize: 18,
+                    //   color: this.style.titleColor,
+                    // ),
                   ),
                   Text(
                     this.adResponse.takeover.subtitle,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: this.style.textColor,
-                      fontFamily: "StatsfmSans",
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 25),
                   ElevatedButton(
@@ -191,15 +207,14 @@ class TakeoverAdWidget extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 7.5),
-                      child: Text(
-                        this.adResponse.takeover.ctaText,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: "StatsfmSans",
-                          color: this.style.backgroundColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: Text(this.adResponse.takeover.ctaText,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(
+                                  color: this.style.backgroundColor,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16)),
                     ),
                   ),
                   GestureDetector(
@@ -247,13 +262,12 @@ class TakeoverAdWidget extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               child: Text(
-                'Dismiss',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontFamily: "StatsfmSans",
-                  fontWeight: FontWeight.w600,
-                ),
+                'Sluit',
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
               ),
             ),
           ],
